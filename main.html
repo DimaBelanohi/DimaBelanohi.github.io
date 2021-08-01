@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lex Arcana Dice Roller</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <link href="./css/all.css" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+</head>
+<body>
+    <div class="App">
+        <div class="rollContainer">
+            <div id="outputNumberDIV" class="outputNumber"></div>
+            <div class="numberButtons">
+                <div class="button number" data-number='1'>1</div>
+                <div class="button number" data-number='2'>2</div>
+                <div class="button number" data-number='3'>3</div>
+                <div class="button number" data-number='4'>4</div>
+                <div class="button number" data-number='5'>5</div>
+                <div class="button number" data-number='6'>6</div>
+                <div class="button number" data-number='7'>7</div>
+                <div class="button number" data-number='8'>8</div>
+                <div class="button number" data-number='9'>9</div>
+                <div class="button" onClick='handleClear()'>
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <div class="button number" data-number='0'>0</div>
+                <div class="button" onClick='handleBackspace()'>
+                    <i class="fas fa-backspace"></i>
+                </div>
+            </div>
+            <div class="rollButton" onClick='handleRoll()'>
+                <i class="fas fa-dice"></i>
+            </div>
+        </div>
+        <div class="scoreContainer hidden" onClick='toggleHidden()'>
+            <div id="scoreDIV" class="score"></div>
+            <div id="diceStrinngDIV" class="diceStrinng"></div>
+        </div>        
+      </div>
+</body>
+
+<script defer>
+    let diceStrinngDIV = document.getElementById('diceStrinngDIV');
+    let scoreDIV = document.getElementById('scoreDIV');
+    let outputNumberDIV = document.getElementById('outputNumberDIV');
+
+    let parameter = '';
+    let score = 0;
+    let diceString = '';
+    
+
+    document.querySelectorAll('.button.number').forEach(item => {
+        console.log('test');
+        item.addEventListener('click', handleClick, false);
+    });
+  
+    function handleClick(e) {
+        if (parameter.length < 6) {
+            if (+e.target.dataset.number !== 0) {
+                parameter += e.target.dataset.number;
+                outputNumberDIV.innerText = parameter;
+            } else {
+                if (parameter.length !== 0) {
+                    parameter += e.target.dataset.number;
+                    outputNumberDIV.innerText = parameter;   
+                }
+            }      
+        }    
+    };
+
+    function handleClear() {
+        parameter = '';
+        outputNumberDIV.innerText = parameter;
+    };
+
+    function handleBackspace() {
+        if (parameter.length > 0) {
+            parameter = parameter.substring(0, parameter.length - 1);
+            outputNumberDIV.innerText = parameter;
+        }
+    };
+
+    function handleRoll() {
+        if (parameter.length > 0) {
+        if (+parameter > 40 || +parameter < 3) {
+            console.log('too big number');
+            parameter = '';
+            outputNumberDIV.innerText = parameter;
+        } else {
+            let res = diceRoller(+parameter);
+            parameter = '';
+            score = res.score;
+            diceString = res.diceString;
+            outputNumberDIV.innerText = parameter;
+            diceStrinngDIV.innerText = res.diceString;
+            scoreDIV.innerText = res.score;
+            toggleHidden();
+        }      
+        }
+    };
+
+    function toggleHidden() {
+        let scoreContainer = document.querySelectorAll('.scoreContainer')[0];
+        let rollContainer = document.querySelectorAll('.rollContainer')[0];
+        scoreContainer.classList.toggle("hidden");
+        rollContainer.classList.toggle("hidden");
+    };
+
+    function getDiceArr(x) {
+        let mainArr = [3, 4, 5, 6, 8, 10, 12, 20];
+
+        if (x == 5) return [5];
+        if (x == 3) return [3];
+        
+        let mainDice;
+        let addDice;
+        let diceString;
+        let diceArr = [];
+        let multiplicator = 1;
+        for (let index = 0; index < mainArr.length; index++) {
+            let dice = mainArr[index];
+            if (x == 4) {
+                multiplicator = 1;
+                mainDice = 4;
+                addDice = null;
+            }
+            if (x%dice == 0 && x/dice <=3 && x/dice >=1 && multiplicator < x/dice) {
+                diceString = `${x/dice} * d${dice}`;
+                multiplicator = x/dice;
+                mainDice = dice;
+                addDice = null;
+            }       
+            if (mainArr.includes(x - dice) && multiplicator == 1) {
+                diceString = `d${dice} + d${x - dice} **`;
+                multiplicator = 1;
+                mainDice = dice;
+                addDice = x - dice;
+            }
+            if (mainArr.includes(x - dice * 2) && multiplicator != 3) {
+                diceString = `2 * d${dice} + d${x - (dice * 2)} *`;
+                multiplicator = 2;
+                mainDice = dice;
+                addDice = x - (dice * 2);
+            }               
+        }
+        if (x === 30) {
+            return [12, 12, 6];
+        }
+        if (x === 31) {
+            return [20, 6, 5];
+        }
+        if (x === 32) {
+            return [12, 12, 8];
+        }
+        if (x === 33) {
+            return [20, 8, 5];
+        }
+        if (x === 34) {
+            return [12, 12, 10];
+        }
+        if (x === 35) {
+            return [20, 10, 5];
+        }
+        if (x === 36) {
+            return [20, 8, 8];
+        }
+        if (x === 37) {
+            return [20, 12, 5];
+        }
+        if (x === 38) {
+            return [20, 10, 8];
+        }
+        if (x === 39) {
+            return [20, 10, 8];
+        }
+        if (x === 40) {
+            return [20, 10, 10];
+        }
+        for (let i = 0; i < multiplicator; i++) {
+            diceArr.push(mainDice);        
+        }
+        if (addDice) {
+            diceArr.push(addDice);
+        }
+        return diceArr;
+    };
+
+    function getRandomIntInclusive(max) {
+        let min = Math.ceil(1);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    function diceRoller(value) {
+        let score = 0;
+        let diceString = '';
+        let res = {};
+        let diceArr = this.getDiceArr(value);
+        diceArr.forEach((dice, index) => {
+            if (index !== 0) {
+                diceString += '+';
+            }
+            diceString += ` D${dice} `
+            score += this.getRandomIntInclusive(dice);
+        });
+        res.diceString = diceString;
+        res.score = score;
+        return res;
+    };
+</script>
+</html>

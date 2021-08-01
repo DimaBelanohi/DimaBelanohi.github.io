@@ -1,0 +1,94 @@
+
+body {
+    margin: 0;
+}
+
+.App {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 10vh;
+    background-image: url(https://www.studiogiochi.com/files/studiogiochi.com/2019/12/Lex-Arcana-new-72-1-791x1024.jpg);
+    background-position: center;
+    color: white;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.outputNumber {
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15vh;
+    /* border-bottom: 1px solid white; */
+    color: white;
+}
+
+.numberButtons {
+    height: 60vh;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-justify-content: center;
+    -ms-flex-pack: start;
+    justify-content: center;
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.rollButton {
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15vh;
+    /* border-top: 1px solid white; */
+    color: white;
+}
+
+.button {
+    height: 15vh;
+    width: 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.scoreContainer {
+
+}
+
+.score {
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    font-size: 30vh;
+}
+
+.diceStrinng {
+    height: 30vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    font-size: 5vh;
+}
