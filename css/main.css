@@ -8,7 +8,8 @@ body {
     margin: 0 auto;
     text-align: center;
     font-size: 10vh;
-    background-image: url(https://www.studiogiochi.com/files/studiogiochi.com/2019/12/Lex-Arcana-new-72-1-791x1024.jpg);
+    background-image: url(http://2.bp.blogspot.com/-6o3eFC78-_8/VggLKf9KBPI/AAAAAAABM00/WDFg4TEcGp4/s1600/th_nazi_occult___the_tome_by_wraithdt-d944bgl.jpg);
+    background-size: cover;
     background-position: center;
     color: white;
     font-family: Helvetica, Arial, sans-serif;
@@ -67,28 +68,32 @@ body {
     color: white;
 }
 
+.button:hover {
+    cursor: pointer;
+}
+
+.rollButton:hover {
+    cursor: pointer;
+}
+
 .hidden {
     display: none;
 }
 
-.scoreContainer {
-
-}
-
 .score {
-    height: 70vh;
+    height: 35vh;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 500;
-    font-size: 30vh;
+    font-size: 20vh;
 }
 
-.diceStrinng {
+.scoreString {
     height: 30vh;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 500;
-    font-size: 5vh;
+    font-size: 10vh;
 }

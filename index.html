@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lex Arcana Dice Roller</title>
+    <title>Achtung! Cthulhu</title>
     <link rel="stylesheet" href="./css/main.css">
     <link href="./css/all.css" rel="stylesheet">
     <link rel="shortcut icon" href="favicon.png" type="image/png">
@@ -36,15 +36,25 @@
             </div>
         </div>
         <div class="scoreContainer hidden" onClick='toggleHidden()'>
-            <div id="scoreDIV" class="score"></div>
-            <div id="diceStrinngDIV" class="diceStrinng"></div>
+            <div class="score">
+                <span id="successesDIV"></span>
+                <i class="fas fa-bahai"></i>
+            </div>
+            <div class="score">
+                <span id="effectsDIV"></span>
+                <i class="fas fa-exclamation"></i>
+            </div>
+            <div class="scoreString">
+                <span id="scoreStringDIV"></span>
+            </div>
         </div>        
       </div>
 </body>
 
 <script defer>
-    let diceStrinngDIV = document.getElementById('diceStrinngDIV');
-    let scoreDIV = document.getElementById('scoreDIV');
+    let effectsDIV = document.getElementById('effectsDIV');
+    let successesDIV = document.getElementById('successesDIV');
+    let scoreStringDIV = document.getElementById('scoreStringDIV');
     let outputNumberDIV = document.getElementById('outputNumberDIV');
 
     let parameter = '';
@@ -53,7 +63,6 @@
     
 
     document.querySelectorAll('.button.number').forEach(item => {
-        console.log('test');
         item.addEventListener('click', handleClick, false);
     });
   
@@ -85,7 +94,7 @@
 
     function handleRoll() {
         if (parameter.length > 0) {
-        if (+parameter > 40 || +parameter < 3) {
+        if (+parameter > 20) {
             console.log('too big number');
             parameter = '';
             outputNumberDIV.innerText = parameter;
@@ -95,8 +104,9 @@
             score = res.score;
             diceString = res.diceString;
             outputNumberDIV.innerText = parameter;
-            diceStrinngDIV.innerText = res.diceString;
-            scoreDIV.innerText = res.score;
+            successesDIV.innerText = res.successes ? res.successes : '0';
+            effectsDIV.innerText = res.effects ? res.effects : '0';
+            scoreStringDIV.innerText = res.scoreString;
             toggleHidden();
         }      
         }
@@ -109,105 +119,44 @@
         rollContainer.classList.toggle("hidden");
     };
 
-    function getDiceArr(x) {
-        let mainArr = [3, 4, 5, 6, 8, 10, 12, 20];
-
-        if (x == 5) return [5];
-        if (x == 3) return [3];
-        
-        let mainDice;
-        let addDice;
-        let diceString;
-        let diceArr = [];
-        let multiplicator = 1;
-        for (let index = 0; index < mainArr.length; index++) {
-            let dice = mainArr[index];
-            if (x == 4) {
-                multiplicator = 1;
-                mainDice = 4;
-                addDice = null;
-            }
-            if (x%dice == 0 && x/dice <=3 && x/dice >=1 && multiplicator < x/dice) {
-                diceString = `${x/dice} * d${dice}`;
-                multiplicator = x/dice;
-                mainDice = dice;
-                addDice = null;
-            }       
-            if (mainArr.includes(x - dice) && multiplicator == 1) {
-                diceString = `d${dice} + d${x - dice} **`;
-                multiplicator = 1;
-                mainDice = dice;
-                addDice = x - dice;
-            }
-            if (mainArr.includes(x - dice * 2) && multiplicator != 3) {
-                diceString = `2 * d${dice} + d${x - (dice * 2)} *`;
-                multiplicator = 2;
-                mainDice = dice;
-                addDice = x - (dice * 2);
-            }               
-        }
-        if (x === 30) {
-            return [12, 12, 6];
-        }
-        if (x === 31) {
-            return [20, 6, 5];
-        }
-        if (x === 32) {
-            return [12, 12, 8];
-        }
-        if (x === 33) {
-            return [20, 8, 5];
-        }
-        if (x === 34) {
-            return [12, 12, 10];
-        }
-        if (x === 35) {
-            return [20, 10, 5];
-        }
-        if (x === 36) {
-            return [20, 8, 8];
-        }
-        if (x === 37) {
-            return [20, 12, 5];
-        }
-        if (x === 38) {
-            return [20, 10, 8];
-        }
-        if (x === 39) {
-            return [20, 10, 8];
-        }
-        if (x === 40) {
-            return [20, 10, 10];
-        }
-        for (let i = 0; i < multiplicator; i++) {
-            diceArr.push(mainDice);        
-        }
-        if (addDice) {
-            diceArr.push(addDice);
-        }
-        return diceArr;
-    };
-
-    function getRandomIntInclusive(max) {
+    function getRandomIntInclusive() {
         let min = Math.ceil(1);
-        max = Math.floor(max);
+        let max = Math.floor(6);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
     function diceRoller(value) {
-        let score = 0;
-        let diceString = '';
+        let scoreArray = [];
+        let successes = 0;
+        let effects = 0;
+        let scoreString = '';
         let res = {};
-        let diceArr = this.getDiceArr(value);
-        diceArr.forEach((dice, index) => {
-            if (index !== 0) {
-                diceString += '+';
+        for (let index = 0; index < value; index++) {
+            scoreArray.push(this.getRandomIntInclusive());            
+        }
+        scoreArray.forEach(item => {
+            scoreString += item + ' ';
+            if (item === 1) {
+                successes += 1;
             }
-            diceString += ` D${dice} `
-            score += this.getRandomIntInclusive(dice);
+            if (item === 2) {
+                successes += 2;
+            }
+            if (item === 5 || item === 6) {
+                successes += 1;
+                effects += 1;
+            }
         });
-        res.diceString = diceString;
-        res.score = score;
+        console.log(scoreArray);
+        console.log(successes);
+        console.log(effects);
+        if (successes) {
+            res.successes = successes;
+        }
+        if (effects) {
+            res.effects = effects;
+        }
+        res.scoreString = scoreString;
         return res;
     };
 </script>
